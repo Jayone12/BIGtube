@@ -1,0 +1,6 @@
+mixin videoList(video)
+ div
+  ul
+   li
+    a(href=`/videos/${video.id}`) #{video.title}
+   li=video.description

@@ -1,0 +1,12 @@
+extends base
+include mixins/videoList
+
+block content
+ h1 #{pageTitle}입니다.
+
+ each data in fakeData
+  +videoList(data)
+ else
+  li 아무것도 없습니다.
+  
+ include ./partials/footer
