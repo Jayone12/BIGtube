@@ -1,6 +1,7 @@
 extends base
 
 block content
- h4=video.title
- p=video.description
+ div
+  p=video.description
+  small=video.createdAt
  a(href=`${video.id}/edit`) 수정하기 &rarr;
