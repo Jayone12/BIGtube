@@ -12,17 +12,31 @@ export const watch = async (req, res) => {
   if (video) {
     return res.render("watch", { pageTitle: video.title, video });
   }
-
   return res.render("404", { pageTitle: "video not found." });
 };
-export const getEdit = (req, res) => {
+
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-  return res.render("videoEdit", { pageTitle: "영상 수정페이지" });
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "video not found." });
+  }
+  return res.render("videoEdit", { pageTitle: "video Edit", video });
 };
 
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title, description } = req.body;
+  const { title, description, hashtags } = req.body;
+  // id와 일치하는 내용이 있는지 찾고 boolean 형태로 반환
+  const video = await Video.exists({ _id: id });
+  if (!video) {
+    return res.render("404", { pageTitle: "Video not found." });
+  }
+  await Video.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags: Video.formatHashtags(hashtags),
+  });
   return res.redirect(`/videos/${id}`);
 };
 
@@ -37,7 +51,7 @@ export const postUpload = async (req, res) => {
     await Video.create({
       title,
       description,
-      hashtags: hashtags.split(",").map((word) => `#${word}`),
+      hashtags: Video.formatHashtags(hashtags),
     });
     return res.redirect("/");
   } catch (error) {
