@@ -62,3 +62,10 @@ export const postUpload = async (req, res) => {
     });
   }
 };
+
+export const deleteVideo = async (req, res) => {
+  const { id } = req.params;
+  // 해당하는 id를 찾고 삭제한다.
+  await Video.findByIdAndDelete(id);
+  return res.redirect("/");
+};
