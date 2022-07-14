@@ -1,4 +1,5 @@
 import User from "../models/User";
+import bcrypt from "bcrypt";
 
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "Create Account" });
@@ -44,12 +45,20 @@ export const getLogin = (req, res) => {
 
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  // username으로 db에 있는지 확인한다.
-  const exists = await User.exists({ username });
-  if (!exists) {
+  const pageTItle = "Login";
+  // db에서 입력한 username을 찾는다.
+  const user = await findOne({ username });
+  if (!user) {
     return res.status(400).render("login", {
-      pageTItle: "Login",
+      pageTItle,
       errorMessage: "입력하신 이름의 회원 정보를 찾을 수 없습니다.",
+    });
+  }
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) {
+    return res.status(400).render("login", {
+      pageTItle,
+      errorMessage: "비밀번호가 틀렸습니다.",
     });
   }
   res.end();
