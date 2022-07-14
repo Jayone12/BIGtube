@@ -45,21 +45,23 @@ export const getLogin = (req, res) => {
 
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  const pageTItle = "Login";
+  const pageTitle = "Login";
   // db에서 입력한 username을 찾는다.
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(400).render("login", {
-      pageTItle,
+      pageTitle,
       errorMessage: "입력하신 이름의 회원 정보를 찾을 수 없습니다.",
     });
   }
   const ok = await bcrypt.compare(password, user.password);
   if (!ok) {
     return res.status(400).render("login", {
-      pageTItle,
+      pageTitle,
       errorMessage: "비밀번호가 틀렸습니다.",
     });
   }
+  req.session.loggedIn = true;
+  req.session.user = user;
   res.end();
 };
