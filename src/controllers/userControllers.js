@@ -38,6 +38,19 @@ export const postJoin = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {
-  res.send("login");
+export const getLogin = (req, res) => {
+  return res.render("login", { pageTitle: "Login" });
+};
+
+export const postLogin = async (req, res) => {
+  const { username, password } = req.body;
+  // username으로 db에 있는지 확인한다.
+  const exists = await User.exists({ username });
+  if (!exists) {
+    return res.status(400).render("login", {
+      pageTItle: "Login",
+      errorMessage: "입력하신 이름의 회원 정보를 찾을 수 없습니다.",
+    });
+  }
+  res.end();
 };
