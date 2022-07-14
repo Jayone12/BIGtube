@@ -63,5 +63,5 @@ export const postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
-  res.end();
+  return res.redirect("/");
 };
