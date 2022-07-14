@@ -13,7 +13,6 @@ export const postJoin = async (req, res) => {
       errorMessage: "비밀번호가 동일하지 않습니다.",
     });
   }
-
   // 유저네임 또는 이메일 중 한가지라고 중복되는것을 찾는다.
   const exists = await User.exists({ $or: [{ username }, { email }] });
   if (exists) {
@@ -22,14 +21,21 @@ export const postJoin = async (req, res) => {
       errorMessage: "이미 사용중인 아이디 또는 이름입니다.",
     });
   }
-  await User.create({
-    name,
-    email,
-    username,
-    password,
-    location,
-  });
-  res.redirect("/login");
+  try {
+    await User.create({
+      name,
+      email,
+      username,
+      password,
+      location,
+    });
+    return res.redirect("/login");
+  } catch (error) {
+    return res.status(400).render("join", {
+      pageTitle: "Upload Video",
+      errorMessage: error._message,
+    });
+  }
 };
 
 export const login = (req, res) => {
