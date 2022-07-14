@@ -47,7 +47,7 @@ export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const pageTItle = "Login";
   // db에서 입력한 username을 찾는다.
-  const user = await findOne({ username });
+  const user = await User.findOne({ username });
   if (!user) {
     return res.status(400).render("login", {
       pageTItle,
