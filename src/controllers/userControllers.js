@@ -146,6 +146,36 @@ export const getEdit = (req, res) => {
   return res.render("userEdit", { pageTitle: "edit" });
 };
 
-export const postEdit = (req, res) => {
-  return res.render("userEdit", { pageTitle: "edit" });
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { email, name, username, location },
+  } = req;
+  const exists = await User.exists({
+    // 입력한 값과 일치하지 않는 ID를 조회하고
+    _id: { $ne: { _id } },
+    // 위에서 조회한 ID중 입력한 값과 동일한 동일한 ID가 있는지 조회한다.
+    $or: [{ username }, { email }],
+  });
+
+  if (exists) {
+    return res.status(400).render("userEdit", {
+      pageTitle: "Edit",
+      errorMessage: "This username/email is already taken.",
+    });
+  }
+  const userUpdate = await User.findByIdAndUpdate(
+    _id,
+    {
+      email,
+      name,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = userUpdate;
+  return res.redirect("/users/edit");
 };
