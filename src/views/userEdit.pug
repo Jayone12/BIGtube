@@ -1,9 +1,13 @@
 extends base
 
 block content
+ small #{errorMessage}
  form(method="POST")
   input( name="email", type="email", required, placeholder="이메일을 입력하세요.", value=loggedInUser.email)
   input( name="name", type="text", required, placeholder="본인 이름을 입력하세요.", value=loggedInUser.name)
   input( name="username", type="text", required, placeholder="사용할 이름을 입력하세요.", value=loggedInUser.username)
   input( name="location", type="text", required, placeholder="지역을 입력하세요.", value=loggedInUser.location)
   input(type="submit", value="프로필 수정")
+  if !loggedInUser.socialOnly
+   hr
+   a(href="/users/change-password") 비밀번호 변경하기 &rarr;
