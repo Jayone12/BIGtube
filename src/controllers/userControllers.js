@@ -30,6 +30,7 @@ export const postJoin = async (req, res) => {
       username,
       password,
       location,
+      avatarUrl,
     });
     return res.redirect("/login");
   } catch (error) {
@@ -149,9 +150,10 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { email, name, username, location },
+    file,
   } = req;
   const exists = await User.exists({
     // 입력한 값과 일치하지 않는 ID를 조회하고
@@ -173,6 +175,7 @@ export const postEdit = async (req, res) => {
       name,
       username,
       location,
+      avatarUrl: file ? file.path : avatarUrl,
     },
     { new: true }
   );
