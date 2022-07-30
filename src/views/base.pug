@@ -17,6 +17,8 @@ html(lang="ko")
                 li
                     a(href="/users/logout") Log out
                 li
+                    a(href=`/users/${loggedInUser._id}`) my Profile
+                li
                     a(href="/videos/upload") Upload
             else
                 li
