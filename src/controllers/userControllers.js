@@ -122,7 +122,7 @@ export const finishGithubLogin = async (req, res) => {
     if (!user) {
       user = await User.create({
         name: userData.name,
-        avatarUrl: userData.avatarUrl,
+        avatarUrl: userData.avatar_url,
         email: emailObj.email,
         username: userData.login,
         password: "",
@@ -222,4 +222,10 @@ export const postChangePassword = async (req, res) => {
 
   req.session.destroy();
   return res.redirect("/login");
+};
+
+export const userProfile = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  return res.render("userProfile", { pageTitle: user.name, user });
 };
