@@ -208,8 +208,15 @@ export const postChangePassword = async (req, res) => {
       errorMessage: "비밀번호가 동일하지 않습니다.",
     });
   }
+  if (oldPassword === newPassword) {
+    return res.status(400).render("changePassword", {
+      pageTitle,
+      errorMessage: "이전 비밀번호와 동일합니다.",
+    });
+  }
   user.password = newPassword;
   await user.save();
 
-  return res.redirect("/users/logout");
+  req.session.destroy();
+  return res.redirect("/login");
 };
