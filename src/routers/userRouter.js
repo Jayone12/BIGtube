@@ -7,6 +7,7 @@ import {
   postEdit,
   getChangePassword,
   postChangePassword,
+  userProfile,
 } from "../controllers/userControllers";
 import {
   avatarUpload,
@@ -29,5 +30,7 @@ userRouter
   .all(protectorMiddleware)
   .get(getChangePassword)
   .post(postChangePassword);
+
+userRouter.get("/:id", userProfile);
 
 export default userRouter;
