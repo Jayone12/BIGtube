@@ -1,8 +1,11 @@
 extends base
 
 block content
+ img(src="/"+loggedInUser.avatarUrl, width="100", height="100")
  small #{errorMessage}
- form(method="POST")
+ form(method="POST", enctype="multipart/form-data")
+  label(for="avatar") Avatar
+  input(type="file", name="avatar" id="avatar" accept="image/*")
   input( name="email", type="email", required, placeholder="이메일을 입력하세요.", value=loggedInUser.email)
   input( name="name", type="text", required, placeholder="본인 이름을 입력하세요.", value=loggedInUser.name)
   input( name="username", type="text", required, placeholder="사용할 이름을 입력하세요.", value=loggedInUser.username)
