@@ -4,12 +4,14 @@ block content
  if errorMessage
   small=errorMessage
 
- form(method="POST")
+ form(method="POST", enctype="multipart/form-data")
   input( name="email", type="email", required, placeholder="이메일을 입력하세요.")
   input( name="username", type="text", required, placeholder="사용할 이름을 입력하세요.")
   input( name="password", type="password", required, placeholder="비밀번호를 입력하세요.")
   input( name="password2", type="password", required, placeholder="비밀번호를 다시 입력하세요.")
   input( name="name", type="text", required, placeholder="본인 이름을 입력하세요.")
+  label(for="avatar")
+  input(type="file", name="avatar" id="avatar" accept="image/*")
   input( name="location", type="text", required, placeholder="지역을 입력하세요.")
   input(type="submit", value="완료")
  hr
