@@ -1,8 +1,2 @@
 extends base
-include mixins/videoList
-
 block content
- each video in videos
-  +videoList(video)
- else
-  li 등록한 동영상이 없습니다.
