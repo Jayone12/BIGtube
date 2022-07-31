@@ -1,3 +1,4 @@
+import User from "../models/User";
 import Video from "../models/Video";
 
 export const trending = async (req, res) => {
@@ -8,7 +9,7 @@ export const trending = async (req, res) => {
 
 export const watch = async (req, res) => {
   const { id } = req.params;
-  const video = await Video.findById(id);
+  const video = await Video.findById(id).populate("owner");
   if (!video) {
     return res.render("404", { pageTitle: "video not found." });
   }
@@ -21,7 +22,10 @@ export const getEdit = async (req, res) => {
   if (!video) {
     return res.status(404).render("404", { pageTitle: "video not found." });
   }
-  return res.render("videoEdit", { pageTitle: "video Edit", video });
+  return res.render("videoEdit", {
+    pageTitle: "video Edit",
+    video,
+  });
 };
 
 export const postEdit = async (req, res) => {
@@ -48,6 +52,9 @@ export const postUpload = async (req, res) => {
   const {
     body: { title, description, hashtags },
     file: { path: fileUrl },
+    session: {
+      user: { _id },
+    },
   } = req;
   try {
     // 새로운 비디오를 생성
@@ -55,6 +62,7 @@ export const postUpload = async (req, res) => {
       title,
       description,
       fileUrl,
+      owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
     return res.redirect("/");
