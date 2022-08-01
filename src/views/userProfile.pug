@@ -2,7 +2,11 @@ extends base
 include mixins/videoList
 
 block content
- each video in user.videos
-  +videoList(video)
- else
-  li 등록한 동영상이 없습니다.
+ div.profile__data
+  img(src=`${user.socialOnly ? "" : "/"}` + user.avatarUrl)
+  h3=user.name
+ div.video-grid
+  each video in user.videos
+   +videoList(video)
+  else
+   span.empty__message 등록한 동영상이 없습니다.
