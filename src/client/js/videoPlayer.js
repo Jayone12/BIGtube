@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 const video = document.querySelector("video");
 const playBtn = document.getElementById("play");
 const playBtnIcon = playBtn.querySelector("i");
@@ -29,10 +31,6 @@ const handlePlayClick = (event) => {
   }
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
 };
-
-const handlePause = () => (playBtn.innerText = "Play");
-
-const handlePlay = () => (playBtn.innerText = "Pause");
 
 const handleMute = (event) => {
   if (video.muted) {
@@ -124,12 +122,20 @@ const pressPlay = (event) => {
   if (event.code === "Space") handlePlayClick();
 };
 
+const handleEnded = () => {
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, {
+    method: "POST",
+  });
+};
+
 window.addEventListener("keydown", pressPlay);
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMute);
 volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("loadeddata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdated);
+video.addEventListener("ended", handleEnded);
 timeline.addEventListener("input", handleTimeLineChange);
 timeline.addEventListener("change", handleTimeLineSet);
 fullScreenBtn.addEventListener("click", handleFullScreen);
