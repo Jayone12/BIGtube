@@ -3,7 +3,9 @@ import Video from "../models/Video";
 
 export const trending = async (req, res) => {
   // 데이터 베이스에서 video를 검석핸다.
-  const videos = await Video.find({});
+  const videos = await Video.find({})
+    .sort({ createAt: "desc" })
+    .populate("owner");
   return res.render("home", { pageTitle: "home", videos });
 };
 
@@ -115,7 +117,7 @@ export const search = async (req, res) => {
       title: {
         $regex: new RegExp(keyword, "i"),
       },
-    });
+    }).populate("owner");
   }
   return res.render("search", { pageTitle: "Search", videos });
 };
