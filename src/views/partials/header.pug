@@ -1,0 +1,28 @@
+header
+ a(href="/").header__logo
+  i.fab.fa-youtube
+ nav
+  ul
+   li
+       a(href="/search")
+        i.fas.fa-search
+   li
+    a(href="/") Home
+   if loggedIn
+    li
+        a(href="/videos/upload") 동영상 등록
+    li
+        a(href="/users/edit") 사용자 프로필
+    li
+        a(href="/users/logout") 로그 아웃
+    li
+        a(href=`/users/${loggedInUser._id}`)
+         if !loggedInUser.avatarUrl
+           span 😀
+         else
+          img.header__avatar(src=`${loggedInUser.socialOnly ? "" : "/"}` + loggedInUser.avatarUrl)
+   else
+    li
+        a(href="/join") 회원가입
+    li
+        a(href="/login").header__btn 로그인

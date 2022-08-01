@@ -3,7 +3,6 @@ extends base
 block content
  if errorMessage
   small=errorMessage
-
  form(method="POST", enctype="multipart/form-data")
   input( name="email", type="email", required, placeholder="이메일을 입력하세요.")
   input( name="username", type="text", required, placeholder="사용할 이름을 입력하세요.")
@@ -14,8 +13,8 @@ block content
   input(type="file", name="avatar" id="avatar" accept="image/*")
   input( name="location", type="text", required, placeholder="지역을 입력하세요.")
   input(type="submit", value="완료")
- hr
- div
+  include partials/socialLogin
+ div.auth-switch
   span 이미 가입하신 회원이십니까?
   br
   a(href="/login") 로그인하러 가기 &rarr;

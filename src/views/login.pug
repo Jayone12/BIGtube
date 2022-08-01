@@ -3,15 +3,11 @@ extends base
 block content
  if errorMessage
   small=errorMessage
-
  form(method="POST")
   input( name="username", type="text", required, placeholder="사용할 이름을 입력하세요.")
   input( name="password", type="password", required, placeholder="비밀번호를 입력하세요.")
   input(type="submit", value="로그인")
-  br
-  a(href="/users/github/start") Continue with Github &rarr;
- hr
- div
+  include partials/socialLogin
+ div.auth-switch
   span 아직 회원가입을 하지 않으셨나요?
-  br
   a(href="/join") 회원가입하러 가기 &rarr;

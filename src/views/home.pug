@@ -2,10 +2,8 @@ extends base
 include mixins/videoList
 
 block content
-
- each video in videos
-  +videoList(video)
- else
-  li 아무것도 없습니다.
-  
- include ./partials/footer
+ div.video-grid
+  each video in videos
+   +videoList(video)
+  else
+   span.empty__message 아무것도 없습니다.
