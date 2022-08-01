@@ -61,17 +61,19 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const {
     body: { title, description, hashtags },
-    file: { path: fileUrl },
+    files: { video, thumbnail },
     session: {
       user: { _id },
     },
   } = req;
+  console.log(req.files);
   try {
     // 새로운 비디오를 생성
     const newVideo = await Video.create({
       title,
       description,
-      fileUrl,
+      fileUrl: video[0].path,
+      thumbUrl: thumbnail[0].path,
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
