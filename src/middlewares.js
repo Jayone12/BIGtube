@@ -7,6 +7,12 @@ export const localsMiddleware = (req, res, next) => {
   next();
 };
 
+export const crossOrigin = (req, res, next) => {
+  res.header("Cross-Origin-Embedder-Policy", "require-corp");
+  res.header("Cross-Origin-Opener-Policy", "same-origin");
+  next();
+};
+
 export const protectorMiddleware = (req, res, next) => {
   if (req.session.loggedIn) {
     next();
