@@ -30,6 +30,7 @@ export const getEdit = async (req, res) => {
     return res.status(404).render("404", { pageTitle: "video not found." });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "로그인이 되어있지 않습니다.");
     return res.status(403).redirect("/");
   }
   return res.render("videoEdit", {
@@ -39,18 +40,28 @@ export const getEdit = async (req, res) => {
 };
 
 export const postEdit = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, hashtags } = req.body;
+  const {
+    params: { id },
+    body: { title, description, hashtags },
+    session: {
+      user: { _id },
+    },
+  } = req;
   // id와 일치하는 내용이 있는지 찾고 boolean 형태로 반환
-  const video = await Video.exists({ _id: id });
+  const video = await Video.findById({ _id: id });
   if (!video) {
     return res.status(404).render("404", { pageTitle: "Video not found." });
+  }
+  if (String(video.owner) !== String(_id)) {
+    req.flash("error", "비디오의 등록자가 아닙니다.");
+    return res.status(403).redirect("/");
   }
   await Video.findByIdAndUpdate(id, {
     title,
     description,
     hashtags: Video.formatHashtags(hashtags),
   });
+  req.flash("success", "변경 되었습니다.");
   return res.redirect(`/videos/${id}`);
 };
 
@@ -66,7 +77,6 @@ export const postUpload = async (req, res) => {
       user: { _id },
     },
   } = req;
-  console.log(req.files);
   try {
     // 새로운 비디오를 생성
     const newVideo = await Video.create({
@@ -104,6 +114,7 @@ export const deleteVideo = async (req, res) => {
       .render("404", { pageTitle: "비디오를 찾을 수 없습니다." });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
   // 해당하는 id를 찾고 삭제한다.
