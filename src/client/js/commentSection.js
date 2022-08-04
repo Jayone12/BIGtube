@@ -2,6 +2,9 @@ import fetch from "node-fetch";
 
 const videoContainer = document.getElementById("videoContainer");
 const form = document.getElementById("commentForm");
+const removeBtn = document.querySelectorAll(".commentRemoveBtn");
+
+const videoId = videoContainer.dataset.id;
 
 const addComment = (text, id) => {
   const videoComments = document.querySelector(".video__comments ul");
@@ -14,6 +17,7 @@ const addComment = (text, id) => {
   span.innerText = text;
   const span2 = document.createElement("span");
   span2.innerText = "❌";
+  span2.addEventListener("click", handleRemove);
   newComment.appendChild(icon);
   newComment.appendChild(span);
   newComment.appendChild(span2);
@@ -24,7 +28,6 @@ const handleSubmit = async (event) => {
   event.preventDefault();
   const textarea = form.querySelector("textarea");
   const text = textarea.value;
-  const videoId = videoContainer.dataset.id;
   if (text === "") {
     return;
   }
@@ -40,8 +43,18 @@ const handleSubmit = async (event) => {
     const { newCommentId } = await response.json();
     addComment(text, newCommentId);
   }
-  // window.location.reload();
 };
 if (form) {
   form.addEventListener("submit", handleSubmit);
 }
+
+const handleRemove = async (event) => {
+  event.preventDefault();
+  const commentId = event.target.parentNode.dataset.id;
+  await fetch(`/api/comment/${commentId}/delete`, {
+    method: "DELETE",
+  });
+  event.target.parentNode.remove();
+};
+
+removeBtn.forEach((remove) => remove.addEventListener("click", handleRemove));
