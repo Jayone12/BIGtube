@@ -16,8 +16,6 @@ module.exports = {
       filename: "css/styles.css",
     }),
   ],
-  mode: "development",
-  watch: true,
   output: {
     // 변환 후 저장할 파일명
     filename: "js/[name].js",
