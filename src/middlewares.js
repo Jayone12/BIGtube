@@ -10,16 +10,31 @@ const s3 = new S3Client({
   },
 });
 
-const multerUploader = multerS3({
+const s3ImageUploader = multerS3({
   s3: s3,
   bucket: "bigtube-storage",
+  key: function (req, file, cb) {
+    cb(null, `images/${Date.now()}_${file.originalname}`);
+  },
   acl: "public-read",
 });
+
+const s3VideoUploader = multerS3({
+  s3: s3,
+  bucket: "bigtube-storage",
+  key: function (req, file, cb) {
+    cb(null, `videos/${Date.now()}_${file.originalname}`);
+  },
+  acl: "public-read",
+});
+
+const isHeroku = process.env.NODE_ENV === "production";
 
 export const localsMiddleware = (req, res, next) => {
   res.locals.siteName = "Bigtube";
   res.locals.loggedIn = Boolean(req.session.loggedIn);
   res.locals.loggedInUser = req.session.user;
+  res.locals.isHeroku = isHeroku;
   next();
 };
 
@@ -52,12 +67,12 @@ export const avatarUpload = multer({
   limits: {
     fileSize: 3000000,
   },
-  storage: multerUploader,
+  storage: isHeroku ? s3ImageUploader : undefined,
 });
 export const videoUpload = multer({
   dest: "uploads/videos/",
   limits: {
     fileSize: 100000000,
   },
-  storage: multerUploader,
+  storage: isHeroku ? s3VideoUploader : undefined,
 });
