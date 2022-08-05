@@ -172,7 +172,6 @@ export const postEdit = async (req, res) => {
       errorMessage: "This username/email is already taken.",
     });
   }
-  console.log(file);
   const userUpdate = await User.findByIdAndUpdate(
     _id,
     {
