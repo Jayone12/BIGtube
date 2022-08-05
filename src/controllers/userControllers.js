@@ -159,6 +159,7 @@ export const postEdit = async (req, res) => {
     body: { email, name, username, location },
     file,
   } = req;
+
   const exists = await User.exists({
     // 입력한 값과 일치하지 않는 ID를 조회하고
     _id: { $ne: { _id } },
@@ -172,6 +173,7 @@ export const postEdit = async (req, res) => {
       errorMessage: "This username/email is already taken.",
     });
   }
+  const isHeroku = process.env.NODE_ENV === "production";
   const userUpdate = await User.findByIdAndUpdate(
     _id,
     {
@@ -179,7 +181,7 @@ export const postEdit = async (req, res) => {
       name,
       username,
       location,
-      avatarUrl: file ? file.location : avatarUrl,
+      avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl,
     },
     { new: true }
   );

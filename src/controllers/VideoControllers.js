@@ -78,13 +78,14 @@ export const postUpload = async (req, res) => {
       user: { _id },
     },
   } = req;
+  const isHeroku = process.env.NODE_ENV === "production";
   try {
     // 새로운 비디오를 생성
     const newVideo = await Video.create({
       title,
       description,
-      fileUrl: video[0].location,
-      thumbUrl: thumbnail[0].location,
+      fileUrl: isHeroku ? video[0].location : video[0].path,
+      thumbUrl: isHeroku ? thumbnail[0].location : video[0].path,
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
